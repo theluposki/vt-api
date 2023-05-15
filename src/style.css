@@ -1,0 +1,53 @@
+*,*::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  text-decoration: none;
+  list-style: none;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --primary: #70e968;
+
+  --dark: #191919;
+  --dark2: #212121;
+  --dark3: #2a2a2a;
+  --dark4: #323232;
+  --dark5: #3b3b3b;
+  --white: #fff;
+}
+
+body {
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  max-height: 100vh;
+  margin: 0; 
+}
+
+#app {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1048px;
+  min-height: 100vh;
+  background-color: var(--dark2);
+  
+  display: flex;
+  flex-direction: column;
+}
+
