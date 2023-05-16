@@ -7,7 +7,20 @@ export const useUserStore = defineStore('user', () => {
     nickname: "luposki",
     picture: "https://i.pravatar.cc/150?img=33"   
   }
-  const user = ref({})
   
-  return { user }
+  let user = ref({})
+  
+  function signIn() {
+    setTimeout(()=> {
+      user.value = defaultUser
+    }, 400)
+  }
+  
+  function signOut() {
+    setTimeout(()=> {
+      user.value = {}
+    }, 400)
+  }
+  
+  return { user, signIn }
 })

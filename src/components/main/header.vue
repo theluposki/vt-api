@@ -17,6 +17,14 @@ const activeLogup = ref(false)
 const lockPass = ref(false)
 const lockConfPass = ref(false)
 
+const signIn = () => {
+  store.signIn()
+}
+
+const signOut = () => {
+  store.signOut()
+}
+
 const fnActiveMenu = () => {
   activeMenu.value = !activeMenu.value
 }
@@ -126,10 +134,16 @@ const fnVerifyConfPassword = () => {
             <a href="" class="nav-link">
                 <i class='bx bxs-contact' ></i>
             </a>
+            
+            <a href="" @click="signOut" class="nav-link out">
+                <i class='bx bx-log-out-circle'></i>
+            </a>
         </div>
         
-        <div class="panel-login" v-if="activeLogin">
+        <div class="panel-login" v-if="activeLogin && !user.id">
           <h1 class="title">Login</h1>
+          
+          {{ user }}
           
           <div class="form-control">
             <label for="email">E-mail</label>
@@ -150,7 +164,7 @@ const fnVerifyConfPassword = () => {
           <div class="form-control">
             <div class="form-control-group">
               <button @click="clearLogin">Limpar</button>
-              <button tabindex="3" id="btnLogin" class="btn-primary">
+              <button @click="signIn" tabindex="3" id="btnLogin" class="btn-primary">
                 Acessar
                 <i class='bx bx-ghost' ></i>
               </button>
@@ -159,7 +173,7 @@ const fnVerifyConfPassword = () => {
           
         </div>
         
-        <div class="panel-logup" v-if="activeLogup">
+        <div class="panel-logup" v-if="activeLogup && !user.id">
           <h1 class="title">Abrir uma conta agora</h1>
           
           <div class="form-control">
@@ -408,6 +422,12 @@ const fnVerifyConfPassword = () => {
 
 .nav-link:active, .btn-menu:active, .btn-signIn:active {
   transform: scale(0.9);
+}
+
+.out {
+  position: absolute;
+  bottom: 4px;
+  
 }
 
 </style>
