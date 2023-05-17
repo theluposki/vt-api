@@ -1,182 +1,31 @@
 <script setup>
   import { ref } from 'vue'
+  import listContactsMock from '../../mocks/contacts.js'
+
+  const list = ref(listContactsMock)
+  const search = ref("")
+
   
-  const list = ref([
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-    { 
-      id: 1, 
-      nickname: "Mylena",
-      picture: "https://i.pravatar.cc/150?img=32"
-    },
-    { 
-      id: 2, 
-      nickname: "Monique",
-      picture: "https://i.pravatar.cc/150?img=31"
-    },
-    { 
-      id: 3, 
-      nickname: "Gustavo",
-      picture: "https://i.pravatar.cc/150?img=17"
-    },
-  ])
-  
+  const searchRegex = () => {
+    if(search.value !== "") {
+      setTimeout(() => {
+        const reg = new RegExp(search.value, 'ig')
+        const result = listContactsMock.filter(item => item.nickname.match(reg)) 
+        return list.value = result 
+      }, 400)
+    } else {
+      return list.value = listContactsMock
+    }
+  }
+
 </script>
 
 <template>
   <div class="page-int">
     <header class="header">
       <div class="form-control">
-        <input type="text" placeholder="Buscar contato">
-        <button class="btn-primary">
+        <input type="text" v-model="search" @keyup="searchRegex" placeholder="Buscar contato">
+        <button class="btn-primary" @click="searchRegex">
           <i class='bx bx-search-alt-2' ></i>
         </button>
       </div>
@@ -280,6 +129,7 @@
     gap: 12px;
     border-radius: 4px;
     border-right: solid 4px transparent;
+    cursor: pointer;
   }
   
   li:hover {
