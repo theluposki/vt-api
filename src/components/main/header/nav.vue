@@ -62,6 +62,7 @@
 .nav-link:hover {
   transition: all ease 0.4s;
   background-color: var(--dark);
+  color: var(--white);
   box-shadow: inset 0 0 6px var(--primary);
 }
 
