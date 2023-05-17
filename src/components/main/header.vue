@@ -142,9 +142,7 @@ const fnVerifyConfPassword = () => {
         
         <div class="panel-login" v-if="activeLogin && !user.id">
           <h1 class="title">Login</h1>
-          
-          {{ user }}
-          
+               
           <div class="form-control">
             <label for="email">E-mail</label>
             <input tabindex="1" type="text" v-model="email" id="email" placeholder="digite seu e-mail">
@@ -305,8 +303,10 @@ const fnVerifyConfPassword = () => {
     top: 64px;
     right: 8px;
     background-color: var(--dark);
-    width: 100%;
+    width: calc(100% - 12px);
     min-height: calc(100vh - 88px);
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
     border-radius: 4px;
 
     display: flex;

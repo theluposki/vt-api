@@ -1,10 +1,19 @@
 <script setup>
+import { computed } from 'vue';
+import { useUserStore } from '../../stores/user.js'
 
+const store = useUserStore()
+
+const user = computed(() => store.user)
 </script>
 
 <template>
-    <main class="main">
-        Main
+    <main v-if="user.id" class="main">
+        Ben-vindo {{ user.nickname }}
+    </main>
+
+    <main v-if="!user.id" class="main">
+        <h1>Myreb</h1>
     </main>
 </template>
 
