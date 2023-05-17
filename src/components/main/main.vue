@@ -8,10 +8,6 @@ const user = computed(() => store.user)
 </script>
 
 <template>
-    <main v-if="user.id" class="main">
-        Ben-vindo {{ user.nickname }}
-    </main>
-
     <main v-if="!user.id" class="main">
         <h1>Myreb</h1>
     </main>
