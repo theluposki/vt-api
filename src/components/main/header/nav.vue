@@ -8,8 +8,12 @@
       <i class="bx bxs-home"></i>
     </router-link>
 
-    <router-link to="/about" class="nav-link" exact-active-class="active">
+    <router-link to="/contacts/list" class="nav-link" exact-active-class="active">
       <i class="bx bxs-contact"></i>
+    </router-link>
+    
+    <router-link to="/about" class="nav-link" exact-active-class="active">
+      <i class='bx bx-info-square' ></i>
     </router-link>
 
     <a href="" @click="signOut" class="nav-link out">

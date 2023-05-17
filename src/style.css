@@ -72,7 +72,22 @@ body {
 
 .page {
   width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  
   min-height: calc(100vh - 80px);
   max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.page-int {
+  width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  
+  min-height: calc(100vh - 140px);
+  max-height: calc(100vh - 140px);
   overflow-y: auto;
 }
