@@ -1,31 +1,46 @@
 <script setup>
 import { useConversationStore } from '../stores/conversation';
-import { ref, computed, onMounted} from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { formatDistanceToNow } from 'date-fns/esm';
 import { ptBR } from 'date-fns/esm/locale';
-import { useRouter } from 'vue-router'
-
-const { push } = useRouter()
-
-
 import MessagesMock from '../mocks/message.js'
+import dataEmojis from '../emojis.js'
 
 const store = useConversationStore()
 
 const friend = computed(() => store.conversation)
 
 const messages = ref(MessagesMock)
+const inputValue = ref('');
+const activeEmojis = ref(false)
+const emojis = ref(dataEmojis)
 
 onMounted(() => {
   const messageContainer = document.getElementById("messageContainer")
 
-  if(messageContainer) {
+  if (messageContainer) {
     messageContainer.scrollTo(0, messageContainer.scrollHeight)
   }
 })
 
+const showPanelEmojis = () => activeEmojis.value = !activeEmojis.value
+
+const handleEmojiClick = (e) => {
+  const input = document.getElementById("input")
+  const emoji = e.target.innerText
+
+  const startPos = input.selectionStart;
+  const endPos = input.selectionEnd;
+
+  input.value = input.value.slice(0, startPos) + emoji + input.value.slice(endPos);
+
+  input.selectionStart = startPos + emoji.length;
+  input.selectionEnd = startPos + emoji.length;
+  input.focus();
+};
+
 const veryMessage = (userFrom) => {
-  if(userFrom === 'luposki') {
+  if (userFrom === 'luposki') {
     return 'me'
   } else {
     return 'friend'
@@ -53,7 +68,7 @@ function formatRelativeDate(date) {
     </header>
 
     <ul v-if="friend.id" id="messageContainer">
-      <li v-for="item in messages" :key="item.id" :class="'message '+veryMessage(item.from)">
+      <li v-for="item in messages" :key="item.id" :class="'message ' + veryMessage(item.from)">
         <span class="name">{{ item.from }}</span>
         <span class="msg">{{ item.message }}</span>
         <span class="createdAt">{{ formatRelativeDate(item.createdAt) }}</span>
@@ -62,12 +77,21 @@ function formatRelativeDate(date) {
 
     <footer class="footer" v-if="friend.id">
       <button>
-        <i class='bx bxs-grid' ></i>
+        <i class='bx bxs-grid'></i>
       </button>
-      <input type="text" placeholder="Mensagem">
+      <button @click="showPanelEmojis">
+        <i class='bx bx-smile'></i>
+      </button>
+      <input type="text" class="input" id="input" v-model="inputValue" placeholder="Mensagem">
       <button class="btn-primary">
-        <i class='bx bxs-send' ></i>
+        <i class='bx bxs-send'></i>
       </button>
+
+      <div class="activeViewEmojis" id="activeViewEmojis" v-if="activeEmojis">
+        <div class="divEmojis" v-for="(item, index) in emojis" :key="index" @click="handleEmojiClick">
+          {{ item }}
+        </div>
+      </div>
     </footer>
 
   </div>
@@ -167,21 +191,24 @@ ul {
   background-color: var(--dark3);
 }
 
-.message > .name {
+.message>.name {
   font-size: 12px;
   font-style: italic;
   color: var(--primary);
 }
-.message > .msg {
+
+.message>.msg {
   margin-top: 12px;
 }
-.message > .createdAt {
+
+.message>.createdAt {
   font-size: 12px;
   font-style: italic;
   color: #ddd;
 }
 
 .footer {
+  position: relative;
   background-color: var(--dark3);
   width: 100%;
   min-height: 60px;
@@ -194,9 +221,47 @@ ul {
   padding: 4px 12px;
 }
 
+.activeViewEmojis {
+  position: absolute;
+  width: 260px;
+  min-height: 300px;
+  max-height: 300px;
+  font-size: 20px;
+  padding: 12px;
+  top: -304px;
+  left: 12px;
+  overflow-y: auto;
+  background-color: var(--dark3);
+  border: solid 2px var(--dark);
+  border-radius: 8px;
 
+  display: flex;
+  flex-wrap: wrap;
+}
 
-input {
+.divEmojis {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 4px;
+  cursor: pointer;
+}
+
+.divEmojis:hover {
+  transform: rotateZ(360deg);
+  background-color: var(--dark);
+  border-radius: 4px;
+}
+
+.divEmojis:active {
+  transform: scale(0.9);
+}
+
+.input {
   width: 100%;
   background: var(--dark);
   border: solid 1px var(--dark2);
@@ -208,14 +273,14 @@ input {
 }
 
 
-input:hover {
+.input:hover {
   transition: all ease 0.4s;
   background: var(--dark2);
   outline: solid 2px var(--primary);
 }
 
 
-input:active {
+.input:active {
   transform: scale(0.9);
 }
 
