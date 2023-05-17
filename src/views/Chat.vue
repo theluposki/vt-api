@@ -1,6 +1,6 @@
 <script setup>
 import { useConversationStore } from '../stores/conversation';
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted} from 'vue'
 import { formatDistanceToNow } from 'date-fns/esm';
 import { ptBR } from 'date-fns/esm/locale';
 import { useRouter } from 'vue-router'
@@ -15,6 +15,14 @@ const store = useConversationStore()
 const friend = computed(() => store.conversation)
 
 const messages = ref(MessagesMock)
+
+onMounted(() => {
+  const messageContainer = document.getElementById("messageContainer")
+
+  if(messageContainer) {
+    messageContainer.scrollTo(0, messageContainer.scrollHeight)
+  }
+})
 
 const veryMessage = (userFrom) => {
   if(userFrom === 'luposki') {
@@ -44,7 +52,7 @@ function formatRelativeDate(date) {
       </div>
     </header>
 
-    <ul v-if="friend.id">
+    <ul v-if="friend.id" id="messageContainer">
       <li v-for="item in messages" :key="item.id" :class="'message '+veryMessage(item.from)">
         <span class="name">{{ item.from }}</span>
         <span class="msg">{{ item.message }}</span>
@@ -135,6 +143,7 @@ ul {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
   padding: 12px;
+  scroll-behavior: smooth;
 }
 
 .message {
