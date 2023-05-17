@@ -3,6 +3,7 @@ import Home from './views/Home.vue'
 import About from './views/About.vue'
 import Contacts from './views/Contacts.vue'
 import NotFound from './views/NotFound.vue'
+import Chat from './views/Chat.vue'
 
 import List from './views/contacts/List.vue'
 import Add from './views/contacts/Add.vue'
@@ -24,6 +25,7 @@ const routes = [
       },
     ],
   },
+  { path: '/chat', component: Chat },
   { path: '/about', component: About },
 ]
 

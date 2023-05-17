@@ -45,11 +45,6 @@
   user-select: none;
 }
 
-.nav-link.active {
-  background-color: var(--primary);
-  color: var(--dark3);
-  box-shadow: inset 0 0 6px var(--dark3);
-}
 
 .nav-link:hover {
   transition: all ease 0.4s;
@@ -60,6 +55,11 @@
 
 .nav-link:active {
   transform: scale(0.9);
+}
+.nav-link.active {
+  background-color: var(--primary);
+  color: var(--dark3);
+  box-shadow: inset 0 0 6px var(--dark3);
 }
 
 </style>

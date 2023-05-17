@@ -1,22 +1,35 @@
 <script setup>
-  import { ref } from 'vue'
-  import listContactsMock from '../../mocks/contacts.js'
+import { ref, computed } from 'vue'
+import listContactsMock from '../../mocks/contacts.js'
+import { useConversationStore } from '../../stores/conversation.js'
+import { useRouter } from 'vue-router'
 
-  const list = ref(listContactsMock)
-  const search = ref("")
+const store = useConversationStore()
 
-  
-  const searchRegex = () => {
-    if(search.value !== "") {
-      setTimeout(() => {
-        const reg = new RegExp(search.value, 'ig')
-        const result = listContactsMock.filter(item => item.nickname.match(reg)) 
-        return list.value = result 
-      }, 400)
-    } else {
-      return list.value = listContactsMock
-    }
+const { push } = useRouter()
+
+const list = ref(listContactsMock)
+const search = ref("")
+
+const friend = computed(() => store.conversation)
+
+
+const startConversation = (item) => {
+  push("/chat")
+  store.start(item)
+}
+
+const searchRegex = () => {
+  if (search.value !== "") {
+    setTimeout(() => {
+      const reg = new RegExp(search.value, 'ig')
+      const result = listContactsMock.filter(item => item.nickname.match(reg))
+      return list.value = result
+    }, 400)
+  } else {
+    return list.value = listContactsMock
   }
+}
 
 </script>
 
@@ -26,13 +39,12 @@
       <div class="form-control">
         <input type="text" v-model="search" @keyup="searchRegex" placeholder="Buscar contato">
         <button class="btn-primary" @click="searchRegex">
-          <i class='bx bx-search-alt-2' ></i>
+          <i class='bx bx-search-alt-2'></i>
         </button>
       </div>
-      
     </header>
     <ul>
-      <li v-for="item in list" :key="item.id">
+      <li v-for="item in list" :key="item.id" @click="startConversation(item)">
         <img :src="item.picture" alt="picture">
         <span>{{ item.nickname }}</span>
       </li>
@@ -41,13 +53,13 @@
 </template>
 
 <style scoped>
-  .header {
-    width: 100%;
-    min-height: 60px;
-    padding: 4px 12px;
-  }
-  
- .form-control {
+.header {
+  width: 100%;
+  min-height: 60px;
+  padding: 4px 12px;
+}
+
+.form-control {
   width: 100%;
   display: flex;
   gap: 4px;
@@ -95,6 +107,7 @@
   transition: all ease 0.4s;
   background: var(--dark);
 }
+
 .form-control button:active {
   transform: scale(0.9);
 }
@@ -103,53 +116,53 @@
   background: var(--primary) !important;
   color: var(--dark) !important;
 }
-  
-  ul {
-    background: var(--dark2);
-    width: 100%;
-  
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    
-    min-height: calc(100vh - 200px);
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-    padding: 4px 12px;
-  }
-  
-  li {
-    width: 100%;
-    min-height: 60px;
-    background: var(--dark3);
-    padding: 0 12px;
-    
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-radius: 4px;
-    border-right: solid 4px transparent;
-    cursor: pointer;
-  }
-  
-  li:hover {
-    transition: all ease .4s;
-    border-right: solid 4px var(--primary);
-  }
-  
-  li:active {
-    transform: scale(0.9);
-  }
-  
-  li img {
-    width: 50px;
-    height: 50px;
-    
-    object-fit: cover;
-    border-radius: 4px;
-  }
-  
-  li span {
-    font-size: 18px;
-  }
+
+ul {
+  background: var(--dark2);
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  min-height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding: 4px 12px;
+}
+
+li {
+  width: 100%;
+  min-height: 60px;
+  background: var(--dark3);
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+  border-right: solid 4px transparent;
+  cursor: pointer;
+}
+
+li:hover {
+  transition: all ease .4s;
+  border-right: solid 4px var(--primary);
+}
+
+li:active {
+  transform: scale(0.9);
+}
+
+li img {
+  width: 50px;
+  height: 50px;
+
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+li span {
+  font-size: 18px;
+}
 </style>
