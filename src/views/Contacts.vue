@@ -1,12 +1,20 @@
 <template>
   <div class="page">
     <div class="nav">
-      <router-link to="/contacts/list" class="nav-link" exact-active-class="active">
-         <i class="bx bxs-contact"></i>
-      </router-link>
-      <router-link to="/contacts/add" class="nav-link" exact-active-class="active">
-         <i class='bx bx-user-plus' ></i>
-      </router-link>
+      <div class="nleft">
+        <router-link to="/contacts/list" class="nav-link" exact-active-class="active">
+           <i class="bx bxs-contact"></i>
+        </router-link>
+
+        <router-link to="/contacts/friend-requests" class="nav-link" exact-active-class="active">
+          <i class='bx bx-user-check'></i>
+        </router-link>
+      </div>
+      <div class="nright">
+        <router-link to="/contacts/add" class="nav-link" exact-active-class="active">
+           <i class='bx bx-user-plus' ></i>
+        </router-link>
+      </div>
     </div>
     
     <router-view></router-view>
@@ -60,6 +68,12 @@
   background-color: var(--primary);
   color: var(--dark3);
   box-shadow: inset 0 0 6px var(--dark3);
+}
+
+.nleft, .nright {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 </style>

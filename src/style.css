@@ -22,6 +22,8 @@
   -webkit-text-size-adjust: 100%;
 
   --primary: #70e968;
+  --danger: #fc1a33;
+  --success: #6a80f4;
 
   --dark: #191919;
   --dark2: #212121;
@@ -29,6 +31,8 @@
   --dark4: #323232;
   --dark5: #3b3b3b;
   --white: #fff;
+
+  accent-color: var(--primary);
 }
 
 ::-webkit-scrollbar {

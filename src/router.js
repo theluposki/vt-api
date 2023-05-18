@@ -6,6 +6,7 @@ import NotFound from './views/NotFound.vue'
 import Chat from './views/Chat.vue'
 
 import List from './views/contacts/List.vue'
+import FriendRequests from './views/contacts/FriendRequests.vue'
 import Add from './views/contacts/Add.vue'
 
 const routes = [
@@ -18,6 +19,10 @@ const routes = [
       {
         path: 'list',
         component: List,
+      },
+      {
+        path: 'friend-requests',
+        component: FriendRequests,
       },
       {
         path: 'add',

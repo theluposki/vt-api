@@ -80,7 +80,8 @@ function formatRelativeDate(date) {
         <i class='bx bxs-grid'></i>
       </button>
       <button @click="showPanelEmojis">
-        <i class='bx bx-smile'></i>
+        <i v-if="!activeEmojis" class='bx bx-smile'></i>
+        <i v-if="activeEmojis" class='bx bx-x'></i>
       </button>
       <input type="text" class="input" id="input" v-model="inputValue" placeholder="Mensagem">
       <button class="btn-primary">
@@ -300,6 +301,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  cursor: pointer;
 }
 
 

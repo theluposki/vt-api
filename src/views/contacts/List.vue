@@ -101,6 +101,7 @@ const searchRegex = () => {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  cursor: pointer;
 }
 
 .form-control button:hover {
