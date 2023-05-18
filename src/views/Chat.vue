@@ -81,6 +81,7 @@ async function startCamera() {
       ctx.clearRect(0, 0, cameraCanvas.width, cameraCanvas.height);
       ctx.filter = 'grayscale(20%) brightness(120%)';
       ctx.scale(-1, 1); // Inverte horizontalmente o contexto
+      ctx.translate(-cameraCanvas.width, 0);
       ctx.drawImage(video, 0, 0, -cameraCanvas.width, cameraCanvas.height);
       ctx.scale(-1, 1); // Restaura a escala horizontal
       requestAnimationFrame(drawFrame);
