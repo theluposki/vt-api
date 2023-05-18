@@ -13,6 +13,7 @@ const friend = computed(() => store.conversation)
 const messages = ref(MessagesMock)
 const inputValue = ref('');
 const activeEmojis = ref(false)
+const activeOptions = ref(false)
 const emojis = ref(dataEmojis)
 
 onMounted(() => {
@@ -23,7 +24,15 @@ onMounted(() => {
   }
 })
 
-const showPanelEmojis = () => activeEmojis.value = !activeEmojis.value
+const showPanelEmojis = () => {
+  activeOptions.value = false
+  activeEmojis.value = !activeEmojis.value
+}
+
+const showPanelOptions = () => {
+  activeEmojis.value = false
+  activeOptions.value = !activeOptions.value
+}
 
 const handleEmojiClick = (e) => {
   const input = document.getElementById("input")
@@ -65,6 +74,15 @@ function formatRelativeDate(date) {
         <img :src="friend.picture" v-if="friend.id" alt="imagem profile">
         <span v-if="friend.id">{{ friend.nickname }}</span>
       </div>
+
+      <div class="hright">
+        <button>
+          <i class='bx bxs-video' ></i>
+        </button>
+        <button>
+          <i class='bx bxs-phone-call' ></i>
+        </button>
+      </div>
     </header>
 
     <ul v-if="friend.id" id="messageContainer">
@@ -76,8 +94,9 @@ function formatRelativeDate(date) {
     </ul>
 
     <footer class="footer" v-if="friend.id">
-      <button>
-        <i class='bx bxs-grid'></i>
+      <button @click="showPanelOptions">
+        <i v-if="!activeOptions" class='bx bxs-grid'></i>
+        <i v-if="activeOptions" class='bx bx-x'></i>
       </button>
       <button @click="showPanelEmojis">
         <i v-if="!activeEmojis" class='bx bx-smile'></i>
@@ -92,6 +111,27 @@ function formatRelativeDate(date) {
         <div class="divEmojis" v-for="(item, index) in emojis" :key="index" @click="handleEmojiClick">
           {{ item }}
         </div>
+      </div>
+
+      <div class="activeViewOptions" v-if="activeOptions">
+        <button>
+          <i class='bx bxs-camera'></i>
+        </button>
+        <button>
+          <i class='bx bx-file'></i>
+        </button>
+        <button>
+          <i class='bx bxs-photo-album'></i>
+        </button>
+        <button>
+          <i class='bx bxs-music'></i>
+        </button>
+        <button>
+          <i class='bx bxs-location-plus' ></i>
+        </button>
+        <button>
+          <i class='bx bxs-user-rectangle' ></i>
+        </button>
       </div>
     </footer>
 
@@ -111,6 +151,12 @@ function formatRelativeDate(date) {
   gap: 6px;
 
   padding: 4px 12px;
+}
+
+.hright {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .nav-link {
@@ -176,7 +222,7 @@ ul {
   display: flex;
   flex-direction: column;
   width: fit-content;
-  max-width: 60%;
+  max-width: 85%;
   padding: 8px 16px;
   border-radius: 8px;
 }
@@ -262,6 +308,27 @@ ul {
   transform: scale(0.9);
 }
 
+.activeViewOptions {
+  position: absolute;
+  width: 260px;
+  min-height: 200px;
+  max-height: 200px;
+  font-size: 20px;
+  padding: 12px;
+  top: -204px;
+  left: 12px;
+  overflow-y: auto;
+  background-color: var(--dark3);
+  border: solid 2px var(--dark);
+  border-radius: 8px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 12px;
+}
+
 .input {
   width: 100%;
   background: var(--dark);
@@ -289,6 +356,7 @@ ul {
 
 button {
   width: content;
+  max-height: 50px;
   background: var(--dark2);
   border: solid 1px var(--dark2);
   border-radius: 4px;
