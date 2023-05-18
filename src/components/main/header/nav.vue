@@ -38,6 +38,8 @@
   gap: 6px;
 
   padding: 4px 0;
+  z-index: 10000;
+  box-shadow: -1px 1px 2px var(--primary);
 }
 
 .nav-link {
