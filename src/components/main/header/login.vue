@@ -9,7 +9,7 @@ const password = ref("");
 const lockPass = ref(false);
 
 const signIn = () => {
-  store.signIn();
+  store.signIn(email.value, password.value);
 };
 
 const clearLogin = () => {

@@ -45,6 +45,12 @@ const fnVerifyConfPassword = () => {
     elConfpassword.classList.remove("input-danger");
   }, 400);
 };
+
+const signUp = async () => {
+ const result = await store.signUp(name.value, email.value, password.value)
+ console.log(result)
+}
+
 </script>
 
 <template>
@@ -111,7 +117,7 @@ const fnVerifyConfPassword = () => {
     <div class="form-control">
       <div class="form-control-group">
         <button @click="clearLogup">Limpar</button>
-        <button tabindex="5" id="btnLogup" class="btn-primary">
+        <button tabindex="5" id="btnLogup" @click="signUp" class="btn-primary">
           Abrir AGORA
           <i class="bx bx-wink-smile"></i>
         </button>
