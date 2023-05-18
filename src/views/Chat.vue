@@ -14,7 +14,7 @@ const messages = ref(MessagesMock)
 const inputValue = ref('');
 const activeEmojis = ref(false)
 const activeOptions = ref(false)
-const activeCam = ref(true)
+const activeCam = ref(false)
 const emojis = ref(dataEmojis)
 
 onMounted(() => {
@@ -73,6 +73,7 @@ async function startCamera() {
 
     function drawFrame() {
       ctx.clearRect(0, 0, cameraCanvas.width, cameraCanvas.height);
+      ctx.filter = 'grayscale(20%) brightness(120%)';
       ctx.scale(-1, 1); // Inverte horizontalmente o contexto
       ctx.drawImage(video, 0, 0, -cameraCanvas.width, cameraCanvas.height);
       ctx.scale(-1, 1); // Restaura a escala horizontal
@@ -244,13 +245,11 @@ function formatRelativeDate(date) {
   bottom: 0;
   left: 0;
   background-color: rgba(33,33,33, 0.6);
-  border: solid 2px var(--dark);
-  
+ 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 0;
   z-index: 20000;
   overflow: hidden;
 }
