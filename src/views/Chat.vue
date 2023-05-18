@@ -55,9 +55,17 @@ async function startCamera() {
     video.autoplay = true;
 
     video.addEventListener('loadedmetadata', () => {
-      const aspectRatio = video.videoWidth / video.videoHeight;
-      const canvasWidth = cameraCanvas.clientWidth;
-      const canvasHeight = canvasWidth / aspectRatio;
+      const aspectRatio = 9 / 16;
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      let canvasWidth = videoWidth;
+      let canvasHeight = videoWidth * aspectRatio;
+
+      if (canvasHeight > videoHeight) {
+        canvasHeight = videoHeight;
+        canvasWidth = videoHeight / aspectRatio;
+      }
 
       cameraCanvas.width = canvasWidth;
       cameraCanvas.height = canvasHeight;
@@ -232,7 +240,7 @@ function formatRelativeDate(date) {
   font-size: 20px;
   bottom: 0;
   left: 0;
-  background-color: var(--dark3);
+  background-color: rgba(33,33,33, 0.6);
   border: solid 2px var(--dark);
   
   display: flex;
@@ -245,10 +253,10 @@ function formatRelativeDate(date) {
 }
 
 .panelCam > #cameraCanvas {
-  background-color: blue;
+  background-color: rgba(33,33,33, 0.4);
   width: 100%;
   max-width: 1048px;
-  aspect-ratio: 9/21;
+  aspect-ratio: 9/16;
   overflow: hidden;
   max-height: calc(100vh - 80px);
 }
