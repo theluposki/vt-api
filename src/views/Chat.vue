@@ -36,6 +36,7 @@ const showPanelOptions = () => {
 }
 
 let videoTrack;
+let currentCamera = 'user';
 
 function stopCamera() {
   if (videoTrack) {
@@ -47,7 +48,12 @@ async function startCamera() {
   const cameraCanvas = document.getElementById("cameraCanvas")
   const ctx = cameraCanvas.getContext('2d');
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const constraints = {
+      video: {
+        facingMode: currentCamera
+      }
+    };
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
     videoTrack = stream.getVideoTracks()[0];
     const video = document.createElement('video');
 
@@ -86,6 +92,17 @@ async function startCamera() {
   } catch (error) {
     console.error('Erro ao acessar a câmera:', error);
   }
+}
+
+const CamTwo = async () => {
+  if (currentCamera === 'user') {
+    currentCamera = 'environment';
+  } else {
+    currentCamera = 'user';
+  }
+
+  stopCamera();
+  startCamera();
 }
 
 const showPanelCam = async () => {
@@ -207,6 +224,10 @@ function formatRelativeDate(date) {
           <i v-if="activeCam" class='bx bx-x'></i>
         </button>
 
+        <button @click="CamTwo" class="camTwo">
+          <i class='bx bx-transfer-alt'></i>
+        </button>
+
         <canvas id="cameraCanvas"></canvas>
       </div>
     </footer>
@@ -268,6 +289,14 @@ function formatRelativeDate(date) {
   position: absolute;
   top: 12px;
   right: 12px;
+  background-color: rgba(33,33,33,0.4);
+  z-index: 20010;
+}
+
+.panelCam > .camTwo {
+  position: absolute;
+  top: 12px;
+  left: 12px;
   background-color: rgba(33,33,33,0.4);
   z-index: 20010;
 }
