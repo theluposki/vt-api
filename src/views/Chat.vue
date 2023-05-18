@@ -239,8 +239,8 @@ function formatRelativeDate(date) {
   position: absolute;
   width: 100vw;
   max-width: 1048px;
-  min-height: calc(100vh - 80px);
-  max-height: calc(100vh - 80px);
+  min-height: calc(100vh - 72px);
+  max-height: calc(100vh - 72px);
   font-size: 20px;
   bottom: 0;
   left: 0;
@@ -260,7 +260,8 @@ function formatRelativeDate(date) {
   max-width: 1048px;
   aspect-ratio: 9/16;
   overflow: hidden;
-  max-height: calc(100vh - 80px);
+  min-height: calc(100vh - 72px);
+  max-height: calc(100vh - 72px);
 }
 
 .panelCam > .close {
