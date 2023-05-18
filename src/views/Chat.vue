@@ -75,7 +75,7 @@ function formatRelativeDate(date) {
         <span v-if="friend.id">{{ friend.nickname }}</span>
       </div>
 
-      <div class="hright">
+      <div class="hright" v-if="friend.id">
         <button>
           <i class='bx bxs-video' ></i>
         </button>
