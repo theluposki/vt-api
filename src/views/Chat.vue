@@ -14,6 +14,7 @@ const messages = ref(MessagesMock)
 const inputValue = ref('');
 const activeEmojis = ref(false)
 const activeOptions = ref(false)
+const activeCam = ref(true)
 const emojis = ref(dataEmojis)
 
 onMounted(() => {
@@ -32,6 +33,60 @@ const showPanelEmojis = () => {
 const showPanelOptions = () => {
   activeEmojis.value = false
   activeOptions.value = !activeOptions.value
+}
+
+let videoTrack;
+
+function stopCamera() {
+  if (videoTrack) {
+    videoTrack.stop();
+  }
+}
+
+async function startCamera() {
+  const cameraCanvas = document.getElementById("cameraCanvas")
+  const ctx = cameraCanvas.getContext('2d');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    videoTrack = stream.getVideoTracks()[0];
+    const video = document.createElement('video');
+
+    video.srcObject = new MediaStream([videoTrack]);
+    video.autoplay = true;
+
+    video.addEventListener('loadedmetadata', () => {
+      const aspectRatio = video.videoWidth / video.videoHeight;
+      const canvasWidth = cameraCanvas.clientWidth;
+      const canvasHeight = canvasWidth / aspectRatio;
+
+      cameraCanvas.width = canvasWidth;
+      cameraCanvas.height = canvasHeight;
+    });
+
+    function drawFrame() {
+      ctx.drawImage(video, 0, 0, cameraCanvas.width, cameraCanvas.height);
+      requestAnimationFrame(drawFrame);
+    }
+
+    video.addEventListener('play', () => {
+      requestAnimationFrame(drawFrame);
+    });
+  } catch (error) {
+    console.error('Erro ao acessar a câmera:', error);
+  }
+}
+
+const showPanelCam = async () => {
+  activeEmojis.value = false
+  activeOptions.value = false
+
+  if(activeCam.value === false) {
+    activeCam.value = true
+    setTimeout(() => startCamera(), 100)
+  } else {
+    activeCam.value = false
+    stopCamera()
+  }
 }
 
 const handleEmojiClick = (e) => {
@@ -114,7 +169,7 @@ function formatRelativeDate(date) {
       </div>
 
       <div class="activeViewOptions" v-if="activeOptions">
-        <button>
+        <button @click="showPanelCam">
           <i class='bx bxs-camera'></i>
         </button>
         <button>
@@ -132,6 +187,15 @@ function formatRelativeDate(date) {
         <button>
           <i class='bx bxs-user-rectangle' ></i>
         </button>
+      </div>
+
+
+      <div class="panelCam" v-if="friend.id && activeCam">
+        <button @click="showPanelCam" class="close">
+          <i v-if="activeCam" class='bx bx-x'></i>
+        </button>
+
+        <canvas id="cameraCanvas"></canvas>
       </div>
     </footer>
 
@@ -157,6 +221,44 @@ function formatRelativeDate(date) {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.panelCam {
+  position: absolute;
+  width: 100vw;
+  max-width: 1048px;
+  min-height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px);
+  font-size: 20px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--dark3);
+  border: solid 2px var(--dark);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0;
+  z-index: 20000;
+  overflow: hidden;
+}
+
+.panelCam > #cameraCanvas {
+  background-color: blue;
+  width: 100%;
+  max-width: 1048px;
+  aspect-ratio: 9/21;
+  overflow: hidden;
+  max-height: calc(100vh - 80px);
+}
+
+.panelCam > .close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(33,33,33,0.4);
+  z-index: 20010;
 }
 
 .nav-link {
