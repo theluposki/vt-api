@@ -14,10 +14,6 @@ const activeMenu = ref(false);
 const activeLogin = ref(false);
 const activeLogup = ref(false);
 
-const signOut = () => {
-  store.signOut();
-};
-
 const fnActiveMenu = () => {
   activeMenu.value = !activeMenu.value;
 };

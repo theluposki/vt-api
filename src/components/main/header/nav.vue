@@ -1,4 +1,11 @@
 <script setup>
+import { useUserStore } from "../../../stores/user.js";
+
+const store = useUserStore();
+
+const signOut = () => {
+  store.signOut();
+};
 
 </script>
 

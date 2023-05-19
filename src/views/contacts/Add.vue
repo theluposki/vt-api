@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useUserStore } from '../../stores/user';
+
+const { signOut } = useUserStore()
 
 const search = ref('')
 const usersFound = ref([])
@@ -21,6 +24,12 @@ const searchUsers = async () => {
       },
       body: JSON.stringify(data)
     });
+
+    console.log(response.status)
+    if(response.status === 401) {
+      signOut()
+      return 
+    }
 
     const result = await response.json();
 

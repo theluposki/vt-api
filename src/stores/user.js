@@ -1,10 +1,16 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref({})
   const message = ref("")
   
+  onMounted(() => {
+    if(localStorage.getItem("user-connected")) {
+      user.value = JSON.parse(localStorage.getItem("user-connected"))
+    }
+  })
+
   async function signIn(email, password) {
     const data = { email, password }
 
@@ -48,6 +54,7 @@ export const useUserStore = defineStore('user', () => {
         setTimeout(() => {
           message.value = ""
           user.value = result2
+          localStorage.setItem("user-connected", JSON.stringify(result2))
         }, 1000) 
       }
 
@@ -83,11 +90,10 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   
-  function signOut() {
-    setTimeout(()=> {
-      user.value = {}
-    }, 400)
+  async function signOut() {
+    user.value = {}
+    localStorage.removeItem("user-connected")
   }
   
-  return { user, signIn, signUp, message }
+  return { user, signIn, signUp, signOut, message }
 })
