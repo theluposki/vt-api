@@ -51,8 +51,8 @@ const fnActiveLogup = () => {
 
     <div v-if="user.id" class="group-options">
       <div class="user-conected">
-        <img :src="user.picture" class="picture" alt="picture" />
         <span class="user-nickname"> @{{ user.nickname }} </span>
+        <img :src="user.picture" class="picture" alt="picture" />
       </div>
 
       <div class="btn-menu" @click="fnActiveMenu">
@@ -110,8 +110,8 @@ const fnActiveLogup = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 1px;
+
+  gap: 4px;
 }
 .user-nickname {
   font-size: 10px;

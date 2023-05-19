@@ -9,6 +9,9 @@ const searchUsers = async () => {
   const data = {
     nickname: search.value
   }
+
+  if(search.value === "") return 
+
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -21,8 +24,10 @@ const searchUsers = async () => {
 
     const result = await response.json();
 
-    if (result[0].nickname) {
+    if (result.length > 0) {
       usersFound.value = result
+    } else {
+      usersFound.value = []
     }
   } catch (error) {
     console.log(error);
@@ -44,8 +49,8 @@ const searchUsers = async () => {
       </div>
     </haeader>
 
-    <ul>
-      <li v-for="item in usersFound" :key="item.id" v-if="usersFound.length > 0">
+    <ul v-if="usersFound.length > 0">
+      <li v-for="item in usersFound" :key="item.id">
         <div class="lleft">
           <img :src="item.picture" alt="picture" />
           <span class="name">{{ item.nickname }}</span>

@@ -45,8 +45,10 @@ export const useUserStore = defineStore('user', () => {
       const result2 = await response2.json();
       if(result === "Autenticado com sucesso!" && result2.id) {
         message.value = result
-        setTimeout(() => user.value = result2, 1000)
-        message.value = ""
+        setTimeout(() => {
+          message.value = ""
+          user.value = result2
+        }, 1000) 
       }
 
     } catch (error) {
