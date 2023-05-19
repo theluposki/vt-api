@@ -15,6 +15,7 @@ const inputValue = ref('');
 const activeEmojis = ref(false)
 const activeOptions = ref(false)
 const activeCam = ref(false)
+
 const emojis = ref(dataEmojis)
 
 onMounted(() => {
@@ -117,6 +118,10 @@ const showPanelCam = async () => {
     activeCam.value = false
     stopCamera()
   }
+}
+
+const CaptureCam = async () => {
+  console.log("capture")
 }
 
 const handleEmojiClick = (e) => {
@@ -229,6 +234,11 @@ function formatRelativeDate(date) {
           <i class='bx bx-transfer-alt'></i>
         </button>
 
+
+        <button @click="CaptureCam" class="CaptureCam">
+          <i class='bx bxs-camera' ></i>
+        </button>
+
         <canvas id="cameraCanvas"></canvas>
       </div>
     </footer>
@@ -300,6 +310,19 @@ function formatRelativeDate(date) {
   left: 12px;
   background-color: rgba(33,33,33,0.4);
   z-index: 20010;
+}
+
+.panelCam > .CaptureCam {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(33,33,33,0.4);
+  z-index: 20010;
+}
+
+.panelCam > .CaptureCam:active {
+  background-color: var(--primary);
 }
 
 .nav-link {
