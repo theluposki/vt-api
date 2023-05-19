@@ -2,13 +2,8 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
-  const defaultUser = { 
-    id: 1, 
-    nickname: "luposki",
-    picture: "https://i.pravatar.cc/150?img=33"   
-  }
-  
-  let user = ref({})
+  const user = ref({})
+  const message = ref("")
   
   async function signIn(email, password) {
     const data = { email, password }
@@ -38,7 +33,9 @@ export const useUserStore = defineStore('user', () => {
 
       const result = await response.json();
       
-      if(result.error) return console.log(result)
+      if(result.error) {
+        message.value = result.error
+      }
 
       const response2 = await fetch(url2, {
         method: 'GET',
@@ -46,10 +43,12 @@ export const useUserStore = defineStore('user', () => {
       })
 
       const result2 = await response2.json();
-
-      if(result2.id) {
-        user.value = result2
+      if(result === "Autenticado com sucesso!" && result2.id) {
+        message.value = result
+        setTimeout(() => user.value = result2, 1000)
+        message.value = ""
       }
+
     } catch (error) {
       console.error(error);
     }
@@ -70,8 +69,13 @@ export const useUserStore = defineStore('user', () => {
       });
   
       const result = await response.json();
-  
-      console.log(result);
+      
+      if(result.error) {
+        message.value = result.error
+        return 
+      }
+
+      message.value = `${result.message} - Faça Login para continuar.`
     } catch (error) {
       console.error(error);
     }
@@ -83,5 +87,5 @@ export const useUserStore = defineStore('user', () => {
     }, 400)
   }
   
-  return { user, signIn, signUp }
+  return { user, signIn, signUp, message }
 })

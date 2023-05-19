@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useUserStore } from "../../../stores/user.js";
 
 const store = useUserStore();
@@ -7,6 +7,8 @@ const store = useUserStore();
 const email = ref("");
 const password = ref("");
 const lockPass = ref(false);
+
+const messageStore = computed(() => store.message)
 
 const signIn = () => {
   store.signIn(email.value, password.value);
@@ -62,6 +64,8 @@ const fnLockPass = () => {
       </div>
     </div>
 
+    <span class="messageStore">{{ messageStore }}</span>
+
     <div class="form-control">
       <div class="form-control-group">
         <button @click="clearLogin">Limpar</button>
@@ -92,6 +96,12 @@ const fnLockPass = () => {
   gap: 6px;
 
   padding: 12px;
+}
+
+.messageStore {
+  display: flex;
+  align-items: center;
+  color: var(--success);
 }
 
 .title {

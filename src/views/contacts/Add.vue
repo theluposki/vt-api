@@ -48,7 +48,7 @@ const searchUsers = async () => {
       <li v-for="item in usersFound" :key="item.id" v-if="usersFound.length > 0">
         <div class="lleft">
           <img :src="item.picture" alt="picture" />
-          <span>{{ item.nickname }}</span>
+          <span class="name">{{ item.nickname }}</span>
         </div>
         <div class="lright">
           <button class="btn-success">
@@ -83,6 +83,10 @@ const searchUsers = async () => {
   gap: 12px;
 }
 
+.name {
+  font-size: 14px;
+}
+
 .title {
   font-size: 16px;
 }
@@ -115,7 +119,7 @@ button:active {
 }
 
 button .text {
-  font-size: 14px !important;
+  font-size: 12px !important;
 }
 
 .input {

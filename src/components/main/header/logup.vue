@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useUserStore } from "../../../stores/user.js";
 
 const store = useUserStore();
@@ -10,6 +10,8 @@ const password = ref("");
 const confpassword = ref("");
 
 const lockConfPass = ref(false);
+
+const messageStore = computed(() => store.message)
 
 const fnLockConfPass = () => {
   const confpassword = document.getElementById("confpassword");
@@ -47,8 +49,8 @@ const fnVerifyConfPassword = () => {
 };
 
 const signUp = async () => {
- const result = await store.signUp(name.value, email.value, password.value)
- console.log(result)
+ if(password.value !== confpassword.value) return
+ await store.signUp(name.value, email.value, password.value)
 }
 
 </script>
@@ -114,6 +116,8 @@ const signUp = async () => {
       </div>
     </div>
 
+    <span class="messageStore">{{ messageStore }}</span>
+
     <div class="form-control">
       <div class="form-control-group">
         <button @click="clearLogup">Limpar</button>
@@ -149,6 +153,12 @@ const signUp = async () => {
 .title {
   font-size: 1.2rem;
   padding: 20px 0;
+}
+
+.messageStore {
+  display: flex;
+  align-items: center;
+  color: var(--success);
 }
 
 .form-control-group {
