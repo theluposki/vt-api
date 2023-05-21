@@ -7,7 +7,8 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  stopCamera()
+  stopCamera();
+  console.log("stop cam")
 })
 
 let videoTrack;
