@@ -4,7 +4,9 @@ import { ref, computed, onMounted } from 'vue'
 import { formatDistanceToNow } from 'date-fns/esm';
 import { ptBR } from 'date-fns/esm/locale';
 import MessagesMock from '../mocks/message.js'
-import dataEmojis from '../emojis.js'
+
+import Emojis from '../components/chat/Emojis.vue'
+import Options from '../components/chat/Options.vue'
 
 const store = useConversationStore()
 
@@ -14,9 +16,6 @@ const messages = ref(MessagesMock)
 const inputValue = ref('');
 const activeEmojis = ref(false)
 const activeOptions = ref(false)
-const activeCam = ref(false)
-
-const emojis = ref(dataEmojis)
 
 onMounted(() => {
   const messageContainer = document.getElementById("messageContainer")
@@ -35,108 +34,6 @@ const showPanelOptions = () => {
   activeEmojis.value = false
   activeOptions.value = !activeOptions.value
 }
-
-let videoTrack;
-let currentCamera = 'user';
-
-function stopCamera() {
-  if (videoTrack) {
-    videoTrack.stop();
-  }
-}
-
-async function startCamera() {
-  const cameraCanvas = document.getElementById("cameraCanvas")
-  const ctx = cameraCanvas.getContext('2d');
-  try {
-    const constraints = {
-      video: {
-        facingMode: currentCamera
-      }
-    };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    videoTrack = stream.getVideoTracks()[0];
-    const video = document.createElement('video');
-
-    video.srcObject = new MediaStream([videoTrack]);
-    video.autoplay = true;
-
-    video.addEventListener('loadedmetadata', () => {
-      const aspectRatio = 9 / 16;
-      const videoWidth = video.videoWidth;
-      const videoHeight = video.videoHeight;
-
-      let canvasWidth = videoWidth;
-      let canvasHeight = videoWidth * aspectRatio;
-
-      if (canvasHeight > videoHeight) {
-        canvasHeight = videoHeight;
-        canvasWidth = videoHeight / aspectRatio;
-      }
-
-      cameraCanvas.width = canvasWidth;
-      cameraCanvas.height = canvasHeight;
-    });
-
-    function drawFrame() {
-      ctx.clearRect(0, 0, cameraCanvas.width, cameraCanvas.height);
-      ctx.filter = 'grayscale(20%) brightness(120%)';
-      ctx.scale(-1, 1); // Inverte horizontalmente o contexto
-      
-      ctx.drawImage(video, 0, 0, -cameraCanvas.width, cameraCanvas.height);
-      ctx.scale(-1, 1); // Restaura a escala horizontal
-      requestAnimationFrame(drawFrame);
-    }
-
-    video.addEventListener('play', () => {
-      requestAnimationFrame(drawFrame);
-    });
-  } catch (error) {
-    console.error('Erro ao acessar a câmera:', error);
-  }
-}
-
-const CamTwo = async () => {
-  if (currentCamera === 'user') {
-    currentCamera = 'environment';
-  } else {
-    currentCamera = 'user';
-  }
-
-  stopCamera();
-  startCamera();
-}
-
-const showPanelCam = async () => {
-  activeEmojis.value = false
-  activeOptions.value = false
-
-  if(activeCam.value === false) {
-    activeCam.value = true
-    setTimeout(() => startCamera(), 100)
-  } else {
-    activeCam.value = false
-    stopCamera()
-  }
-}
-
-const CaptureCam = async () => {
-  console.log("capture")
-}
-
-const handleEmojiClick = (e) => {
-  const input = document.getElementById("input")
-  const emoji = e.target.innerText
-
-  const startPos = input.selectionStart;
-  const endPos = input.selectionEnd;
-
-  input.value = input.value.slice(0, startPos) + emoji + input.value.slice(endPos);
-
-  input.selectionStart = startPos + emoji.length;
-  input.selectionEnd = startPos + emoji.length;
-  input.focus();
-};
 
 const veryMessage = (userFrom) => {
   if (userFrom === 'luposki') {
@@ -197,50 +94,8 @@ function formatRelativeDate(date) {
         <i class='bx bxs-send'></i>
       </button>
 
-      <div class="activeViewEmojis" id="activeViewEmojis" v-if="activeEmojis">
-        <div class="divEmojis" v-for="(item, index) in emojis" :key="index" @click="handleEmojiClick">
-          {{ item }}
-        </div>
-      </div>
-
-      <div class="activeViewOptions" v-if="activeOptions">
-        <button @click="showPanelCam">
-          <i class='bx bxs-camera'></i>
-        </button>
-        <button>
-          <i class='bx bx-file'></i>
-        </button>
-        <button>
-          <i class='bx bxs-photo-album'></i>
-        </button>
-        <button>
-          <i class='bx bxs-music'></i>
-        </button>
-        <button>
-          <i class='bx bxs-location-plus' ></i>
-        </button>
-        <button>
-          <i class='bx bxs-user-rectangle' ></i>
-        </button>
-      </div>
-
-
-      <div class="panelCam" v-if="friend.id && activeCam">
-        <button @click="showPanelCam" class="close">
-          <i v-if="activeCam" class='bx bx-x'></i>
-        </button>
-
-        <button @click="CamTwo" class="camTwo">
-          <i class='bx bx-transfer-alt'></i>
-        </button>
-
-
-        <button @click="CaptureCam" class="CaptureCam">
-          <i class='bx bxs-camera' ></i>
-        </button>
-
-        <canvas id="cameraCanvas"></canvas>
-      </div>
+      <Emojis v-if="activeEmojis" />
+      <Options v-if="activeOptions" />
     </footer>
 
   </div>
@@ -265,64 +120,6 @@ function formatRelativeDate(date) {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.panelCam {
-  position: absolute;
-  width: 100vw;
-  max-width: 1048px;
-  min-height: calc(100vh - 72px);
-  max-height: calc(100vh - 72px);
-  font-size: 20px;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(33,33,33, 0.6);
- 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  z-index: 20000;
-  overflow: hidden;
-}
-
-.panelCam > #cameraCanvas {
-  background-color: rgba(33,33,33, 0.4);
-  width: 100%;
-  max-width: 1048px;
-  aspect-ratio: 9/16;
-  overflow: hidden;
-  min-height: calc(100vh - 72px);
-  max-height: calc(100vh - 72px);
-}
-
-.panelCam > .close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background-color: rgba(33,33,33,0.4);
-  z-index: 20010;
-}
-
-.panelCam > .camTwo {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background-color: rgba(33,33,33,0.4);
-  z-index: 20010;
-}
-
-.panelCam > .CaptureCam {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(33,33,33,0.4);
-  z-index: 20010;
-}
-
-.panelCam > .CaptureCam:active {
-  background-color: var(--primary);
 }
 
 .nav-link {
@@ -434,67 +231,6 @@ ul {
   padding: 4px 12px;
 }
 
-.activeViewEmojis {
-  position: absolute;
-  width: 260px;
-  min-height: 300px;
-  max-height: 300px;
-  font-size: 20px;
-  padding: 12px;
-  top: -304px;
-  left: 12px;
-  overflow-y: auto;
-  background-color: var(--dark3);
-  border: solid 2px var(--dark);
-  border-radius: 8px;
-
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.divEmojis {
-  width: 30px;
-  height: 30px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin: 4px;
-  cursor: pointer;
-}
-
-.divEmojis:hover {
-  transform: rotateZ(360deg);
-  background-color: var(--dark);
-  border-radius: 4px;
-}
-
-.divEmojis:active {
-  transform: scale(0.9);
-}
-
-.activeViewOptions {
-  position: absolute;
-  width: 260px;
-  min-height: 200px;
-  max-height: 200px;
-  font-size: 20px;
-  padding: 12px;
-  top: -204px;
-  left: 12px;
-  overflow-y: auto;
-  background-color: var(--dark3);
-  border: solid 2px var(--dark);
-  border-radius: 8px;
-
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-evenly;
-  gap: 12px;
-}
-
 .input {
   width: 100%;
   background: var(--dark);
@@ -517,8 +253,6 @@ ul {
 .input:active {
   transform: scale(0.9);
 }
-
-
 
 button {
   width: content;
