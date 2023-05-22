@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import listContactsMock from '../../mocks/contacts.js'
 import { useConversationStore } from '../../stores/conversation.js'
 import { useRouter } from 'vue-router'
@@ -8,11 +8,12 @@ const store = useConversationStore()
 
 const { push } = useRouter()
 
-const list = ref(listContactsMock)
+const list = ref([])
 const search = ref("")
 
-const friend = computed(() => store.conversation)
-
+onMounted(async () => {
+  await getMyFriends()
+})
 
 const startConversation = (item) => {
   push("/chat")
@@ -30,6 +31,37 @@ const searchRegex = () => {
     return list.value = listContactsMock
   }
 }
+
+
+const getMyFriends = async () => {
+  const url = `https://localhost:4004/api/v1/users/my-friends`;
+  
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+          "Content-Type": "application/json",
+      }
+    });
+
+    if(response.status === 401) {
+      alert("Sua sessão expirou, Faça login para continuar.")
+      signOut()
+      return 
+    }
+
+    const result = await response.json();
+
+    if (result.length > 0) {
+      list.value = result
+    } else {
+      list.value = []
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 </script>
 

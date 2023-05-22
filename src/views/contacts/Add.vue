@@ -27,6 +27,7 @@ const searchUsers = async () => {
 
     console.log(response.status)
     if(response.status === 401) {
+      alert("Sua sessão expirou, Faça login para continuar.")
       signOut()
       return 
     }
@@ -38,6 +39,38 @@ const searchUsers = async () => {
     } else {
       usersFound.value = []
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const sendFriendRequest = async (nickname) => {
+  const url = `https://localhost:4004/api/v1/users/send-friend-request`;
+  const data = {
+    to: nickname
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    });
+
+    if(response.status === 401) {
+      alert("Sua sessão expirou, Faça login para continuar.")
+      signOut()
+      return 
+    }
+
+    const result = await response.json();
+
+    console.log(result)
+    alert(result)
   } catch (error) {
     console.log(error);
   }
@@ -65,8 +98,8 @@ const searchUsers = async () => {
           <span class="name">{{ item.nickname }}</span>
         </div>
         <div class="lright">
-          <button class="btn-success">
-            <span class="text">Enviar Pedido</span>
+          <button class="btn-success" @click="sendFriendRequest(item.nickname)">
+            <span class="text">Solicitar</span>
             <i class="bx bx-mail-send"></i>
           </button>
         </div>

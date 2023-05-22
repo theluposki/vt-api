@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted} from 'vue'
+import { onMounted, onUnmounted} from 'vue'
 
 
 onMounted(() => {

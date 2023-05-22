@@ -1,9 +1,84 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useUserStore } from '../../stores/user';
 
 const numPending = ref(2)
 const numAdded = ref(5)
 const numReject = ref(30)
+const friendRequests = ref([])
+
+const { signOut } = useUserStore()
+
+onMounted(async () => {
+  await getFriendsRequests()
+})
+
+const getFriendsRequests = async () => {
+  const url = `https://localhost:4004/api/v1/users/get-friends-requests`;
+  
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+          "Content-Type": "application/json",
+      }
+    });
+
+    console.log(response.status)
+
+    if(response.status === 401) {
+      alert("Sua sessão expirou, Faça login para continuar.")
+      signOut()
+      return 
+    }
+
+    const result = await response.json();
+
+    if (result.length > 0) {
+      friendRequests.value = result
+      numPending.value = result.length
+    } else {
+      friendRequests.value = []
+      numPending.value = 0
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const addFriend = async (nickname, requestId) => {
+  const url = `https://localhost:4004/api/v1/users/add-friend`;
+  const data = {
+    nickname,
+    requestId
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    });
+
+    if(response.status === 401) {
+      alert("Sua sessão expirou, Faça login para continuar.")
+      signOut()
+      return 
+    }
+
+    const result = await response.json();
+
+    console.log(result)
+    await getFriendsRequests()
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 </script>
 
@@ -26,166 +101,16 @@ const numReject = ref(30)
 
 
   <ul>
-    <li>
+    <li v-for="item in friendRequests" :key="item.id">
         <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=28" alt="picture">
-          <span>Natali Ferrari</span>
+          <img :src="item.picture" alt="picture">
+          <span>{{ item.nickname }}</span>
         </div>
         <div class="lright">
           <button class="btn-danger">
             <i class='bx bx-trash' ></i>
           </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>
-    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>
-
-
-
-
-
-    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
-            <i class='bx bx-plus' ></i>
-          </button>
-        </div>
-    </li>    <li>
-        <div class="lleft">
-          <img src="https://i.pravatar.cc/150?img=53" alt="picture">
-          <span>Jonas Salamandriel</span>
-        </div>
-        <div class="lright">
-          <button class="btn-danger">
-            <i class='bx bx-trash' ></i>
-          </button>
-          <button class="btn-success">
+          <button class="btn-success" @click="addFriend(item.nickname ,item.id)">
             <i class='bx bx-plus' ></i>
           </button>
         </div>
