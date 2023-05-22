@@ -70,7 +70,7 @@ const sendFriendRequest = async (nickname) => {
     const result = await response.json();
 
     console.log(result)
-    alert(result)
+    alert(result.message)
   } catch (error) {
     console.log(error);
   }
