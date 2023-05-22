@@ -11,8 +11,10 @@ onUnmounted(() => {
   console.log("stop cam")
 })
 
+
 let videoTrack;
 let currentCamera = 'user';
+
 
 function stopCamera() {
   if (videoTrack) {
@@ -21,11 +23,13 @@ function stopCamera() {
 }
 
 async function startCamera() {
-  const cameraCanvas = document.getElementById("cameraCanvas")
+  const cameraCanvas = document.getElementById("cameraCanvas");
   const ctx = cameraCanvas.getContext('2d');
   try {
     const constraints = {
       video: {
+        width: 1280,
+        aspectRatio: 9 / 21,
         facingMode: currentCamera
       }
     };
@@ -37,29 +41,27 @@ async function startCamera() {
     video.autoplay = true;
 
     video.addEventListener('loadedmetadata', () => {
-      const aspectRatio = 9 / 16;
-      const videoWidth = video.videoWidth;
-      const videoHeight = video.videoHeight;
-
-      let canvasWidth = videoWidth;
-      let canvasHeight = videoWidth * aspectRatio;
-
-      if (canvasHeight > videoHeight) {
-        canvasHeight = videoHeight;
-        canvasWidth = videoHeight / aspectRatio;
-      }
-
-      cameraCanvas.width = canvasWidth;
-      cameraCanvas.height = canvasHeight;
+      cameraCanvas.width = video.videoWidth;
+      cameraCanvas.height = video.videoHeight;
     });
 
     function drawFrame() {
       ctx.clearRect(0, 0, cameraCanvas.width, cameraCanvas.height);
-      ctx.filter = 'grayscale(20%) brightness(120%)';
-      ctx.scale(-1, 1); // Inverte horizontalmente o contexto
       
-      ctx.drawImage(video, 0, 0, -cameraCanvas.width, cameraCanvas.height);
-      ctx.scale(-1, 1); // Restaura a escala horizontal
+      if (currentCamera === 'user') {
+        ctx.save();
+        ctx.scale(-1, 1); // Inverte horizontalmente
+        ctx.imageSmoothingEnabled = false;
+        ctx.imageSmoothingQuality = "high";
+        ctx.translate(-cameraCanvas.width, 0);
+      }
+      
+      ctx.drawImage(video, 0, 0, cameraCanvas.width, cameraCanvas.height);
+      
+      if (currentCamera === 'user') {
+        ctx.restore();
+      }
+      
       requestAnimationFrame(drawFrame);
     }
 
@@ -71,21 +73,77 @@ async function startCamera() {
   }
 }
 
-const CamTwo = async () => {
-  if (currentCamera === 'user') {
-    currentCamera = 'environment';
-  } else {
-    currentCamera = 'user';
-  }
-
+async function switchCamera() {
+  currentCamera = currentCamera === 'user' ? 'environment' : 'user';
   stopCamera();
   startCamera();
 }
+
+// let videoTrack;
+// let currentCamera = 'user';
+
+// function stopCamera() {
+//   if (videoTrack) {
+//     videoTrack.stop();
+//   }
+// }
+
+// async function startCamera() {
+//   const cameraCanvas = document.getElementById("cameraCanvas")
+//   const ctx = cameraCanvas.getContext('2d');
+//   try {
+//     const constraints = {
+//       video: {
+//         width: 1080,
+//         aspectRatio: 9/21,
+//         facingMode: currentCamera
+//       }
+//     };
+//     const stream = await navigator.mediaDevices.getUserMedia(constraints);
+//     videoTrack = stream.getVideoTracks()[0];
+//     const video = document.createElement('video');
+
+//     video.srcObject = new MediaStream([videoTrack]);
+//     video.autoplay = true;
+
+//     video.addEventListener('loadedmetadata', () => {
+
+//     });
+
+//     function drawFrame() {
+//       ctx.drawImage(video, 0, 0, cameraCanvas.width, cameraCanvas.height);
+//       requestAnimationFrame(drawFrame);
+//     }
+
+//     video.addEventListener('play', () => {
+//       requestAnimationFrame(drawFrame);
+//     });
+//   } catch (error) {
+//     console.error('Erro ao acessar a câmera:', error);
+//   }
+// }
+
+// const CamTwo = async () => {
+//   if (videoTrack) {
+//     const currentDeviceId = videoTrack.getVideoTracks()[0].getSettings().deviceId;
+//     const devices = await navigator.mediaDevices.enumerateDevices();
+
+//     const nextDevice = devices.find(device => device.kind === 'videoinput' && device.deviceId !== currentDeviceId);
+
+//     if (nextDevice) {
+//       const constraints = { video: { deviceId: { exact: nextDevice.deviceId } } };
+//       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+//       videoTrack.getTracks().forEach(track => track.stop());
+//       videoTrack = newStream;
+//       startCamera();
+//     }
+//   }
+// }
 </script>
 
 <template>
   <div class="panelCam">
-    <button @click="CamTwo" class="camTwo">
+    <button @click="switchCamera" class="camTwo">
       <i class="bx bx-transfer-alt"></i>
     </button>
 
