@@ -1,10 +1,25 @@
 <script setup>
+import { ref, computed } from 'vue'
+import { state } from "../../socket.io.js";
+// import { socket } from '../../plugins/socket.io';
 
+const clientsConected = ref(0);
+const conected = ref(false);
+
+
+computed(() => {
+  conected.value = state.connected()
+})
+
+// socket.on('clients-conected', data => {
+//   console.log(data)
+//   clientsConected.value = data
+// })
 </script>
 
 <template>
   <footer class="footer">
-    Footer
+    <span>conectados: {{ conected }}</span>
   </footer>
 </template>
 

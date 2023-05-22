@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import listContactsMock from '../../mocks/contacts.js'
 import { useConversationStore } from '../../stores/conversation.js'
+import { useUserStore } from '../../stores/user.js'
 import { useRouter } from 'vue-router'
 
 const store = useConversationStore()
+const { signOut } = useUserStore()
 
 const { push } = useRouter()
 
@@ -24,11 +25,11 @@ const searchRegex = () => {
   if (search.value !== "") {
     setTimeout(() => {
       const reg = new RegExp(search.value, 'ig')
-      const result = listContactsMock.filter(item => item.nickname.match(reg))
+      const result = list.value.filter(item => item.nickname.match(reg))
       return list.value = result
     }, 400)
   } else {
-    return list.value = listContactsMock
+    return getMyFriends()
   }
 }
 

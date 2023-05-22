@@ -78,67 +78,6 @@ async function switchCamera() {
   stopCamera();
   startCamera();
 }
-
-// let videoTrack;
-// let currentCamera = 'user';
-
-// function stopCamera() {
-//   if (videoTrack) {
-//     videoTrack.stop();
-//   }
-// }
-
-// async function startCamera() {
-//   const cameraCanvas = document.getElementById("cameraCanvas")
-//   const ctx = cameraCanvas.getContext('2d');
-//   try {
-//     const constraints = {
-//       video: {
-//         width: 1080,
-//         aspectRatio: 9/21,
-//         facingMode: currentCamera
-//       }
-//     };
-//     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-//     videoTrack = stream.getVideoTracks()[0];
-//     const video = document.createElement('video');
-
-//     video.srcObject = new MediaStream([videoTrack]);
-//     video.autoplay = true;
-
-//     video.addEventListener('loadedmetadata', () => {
-
-//     });
-
-//     function drawFrame() {
-//       ctx.drawImage(video, 0, 0, cameraCanvas.width, cameraCanvas.height);
-//       requestAnimationFrame(drawFrame);
-//     }
-
-//     video.addEventListener('play', () => {
-//       requestAnimationFrame(drawFrame);
-//     });
-//   } catch (error) {
-//     console.error('Erro ao acessar a câmera:', error);
-//   }
-// }
-
-// const CamTwo = async () => {
-//   if (videoTrack) {
-//     const currentDeviceId = videoTrack.getVideoTracks()[0].getSettings().deviceId;
-//     const devices = await navigator.mediaDevices.enumerateDevices();
-
-//     const nextDevice = devices.find(device => device.kind === 'videoinput' && device.deviceId !== currentDeviceId);
-
-//     if (nextDevice) {
-//       const constraints = { video: { deviceId: { exact: nextDevice.deviceId } } };
-//       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-//       videoTrack.getTracks().forEach(track => track.stop());
-//       videoTrack = newStream;
-//       startCamera();
-//     }
-//   }
-// }
 </script>
 
 <template>
@@ -167,8 +106,7 @@ async function switchCamera() {
   bottom: 0;
   left: 0;
   background-color: rgba(33,33,33, 0.6);
-  background-color: red;
- 
+
   display: flex;
   align-items: center;
   justify-content: center;

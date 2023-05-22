@@ -1,15 +1,14 @@
 <script setup>
-import { computed } from 'vue';
-import { useUserStore } from './stores/user.js'
+import { computed } from "vue";
+import { useUserStore } from "./stores/user.js";
 
-const store = useUserStore()
+const store = useUserStore();
 
-const user = computed(() => store.user)
+const user = computed(() => store.user);
 
-import HeaderM from "./components/main/header.vue"
-import MainM from "./components/main/main.vue"
-import FooterM from "./components/main/footer.vue"
-
+import HeaderM from "./components/main/header.vue";
+import MainM from "./components/main/main.vue";
+import FooterM from "./components/main/footer.vue";
 </script>
 
 <template>
@@ -18,5 +17,3 @@ import FooterM from "./components/main/footer.vue"
   <MainM v-if="!user.id" />
   <FooterM />
 </template>
-
-

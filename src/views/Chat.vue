@@ -1,21 +1,31 @@
 <script setup>
 import { useConversationStore } from '../stores/conversation';
+import { useUserStore } from '../stores/user.js'
 import { ref, computed, onMounted } from 'vue'
 import { formatDistanceToNow } from 'date-fns/esm';
 import { ptBR } from 'date-fns/esm/locale';
-import MessagesMock from '../mocks/message.js'
 
 import Emojis from '../components/chat/Emojis.vue'
 import Options from '../components/chat/Options.vue'
+import { socket } from '../socket.io.js';
 
 const store = useConversationStore()
+const storeUser = useUserStore()
 
 const friend = computed(() => store.conversation)
+const user = computed(() => storeUser.user)
 
-const messages = ref(MessagesMock)
+const messages = ref([])
 const inputValue = ref('');
 const activeEmojis = ref(false)
 const activeOptions = ref(false)
+
+socket.on('messageReceived', (message) => {
+  console.log(message)
+  messages.value.push(message);
+});
+
+socket.emit("setNickname", user.value.nickname);
 
 onMounted(() => {
   const messageContainer = document.getElementById("messageContainer")
@@ -36,7 +46,7 @@ const showPanelOptions = () => {
 }
 
 const veryMessage = (userFrom) => {
-  if (userFrom === 'luposki') {
+  if (userFrom === user.value.nickname) {
     return 'me'
   } else {
     return 'friend'
@@ -47,6 +57,15 @@ function formatRelativeDate(date) {
   const now = new Date(date);
   const relativeDate = formatDistanceToNow(now, { locale: ptBR });
   return relativeDate
+}
+
+const sendMessage = async () => {
+  console.log("akk")
+
+  socket.emit('sendMessageToNickname', { 
+    nickname: friend.value.nickname, 
+    message: inputValue.value 
+  });
 }
 
 </script>
@@ -90,7 +109,7 @@ function formatRelativeDate(date) {
         <i v-if="activeEmojis" class='bx bx-x'></i>
       </button>
       <input type="text" class="input" id="input" v-model="inputValue" placeholder="Mensagem">
-      <button class="btn-primary">
+      <button @click="sendMessage" class="btn-primary">
         <i class='bx bxs-send'></i>
       </button>
 
