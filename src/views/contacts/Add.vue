@@ -62,8 +62,8 @@ const sendFriendRequest = async (nickname) => {
     });
 
     if(response.status === 401) {
-      alert("Sua sessão expirou, Faça login para continuar.")
       signOut()
+      alert("Sua sessão expirou, Faça login para continuar.")
       return 
     }
 
