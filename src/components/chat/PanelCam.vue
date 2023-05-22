@@ -29,7 +29,7 @@ async function startCamera() {
     const constraints = {
       video: {
         width: 1280,
-        aspectRatio: 9/16,
+        aspectRatio: 16/9,
         facingMode: currentCamera
       }
     };
