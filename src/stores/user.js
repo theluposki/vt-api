@@ -1,13 +1,19 @@
 import { defineStore } from 'pinia'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { io } from 'socket.io-client';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref({})
   const message = ref("")
-  
+
+  const socket = io('https://localhost:4004', {
+    transports: ['websocket']
+  })
+
   onMounted(() => {
     if(localStorage.getItem("user-connected")) {
       user.value = JSON.parse(localStorage.getItem("user-connected"))
+      socket.emit("setNickname", user.value.nickname)
     }
   })
 
@@ -95,5 +101,5 @@ export const useUserStore = defineStore('user', () => {
     localStorage.removeItem("user-connected")
   }
   
-  return { user, signIn, signUp, signOut, message }
+  return { user, signIn, signUp, signOut, message, socket }
 })

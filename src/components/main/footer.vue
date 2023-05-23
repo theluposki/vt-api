@@ -1,25 +1,21 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { state } from "../../socket.io.js";
-// import { socket } from '../../plugins/socket.io';
+
+import { useUserStore } from '../../stores/user';
+
+const { socket } = useUserStore()
 
 const clientsConected = ref(0);
-const conected = ref(false);
 
-
-computed(() => {
-  conected.value = state.connected()
+socket.on('clients-conected', data => {
+  clientsConected.value = data
 })
 
-// socket.on('clients-conected', data => {
-//   console.log(data)
-//   clientsConected.value = data
-// })
 </script>
 
 <template>
   <footer class="footer">
-    <span>conectados: {{ conected }}</span>
+    <span>conectados: {{ clientsConected }}</span>
   </footer>
 </template>
 

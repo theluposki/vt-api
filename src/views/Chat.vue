@@ -7,7 +7,6 @@ import { ptBR } from 'date-fns/esm/locale';
 
 import Emojis from '../components/chat/Emojis.vue'
 import Options from '../components/chat/Options.vue'
-import { socket } from '../socket.io.js';
 
 const store = useConversationStore()
 const storeUser = useUserStore()
@@ -20,19 +19,26 @@ const inputValue = ref('');
 const activeEmojis = ref(false)
 const activeOptions = ref(false)
 
-socket.on('messageReceived', (message) => {
-  console.log(message)
-  messages.value.push(message);
-});
-
-socket.emit("setNickname", user.value.nickname);
-
-onMounted(() => {
+function scrollToBottom () {
   const messageContainer = document.getElementById("messageContainer")
-
-  if (messageContainer) {
+  if(messageContainer) {
     messageContainer.scrollTo(0, messageContainer.scrollHeight)
   }
+}
+
+storeUser.socket.on("messageReceived", (data) => {
+  const messageContainer = document.getElementById("messageContainer")
+  messages.value.push(data)
+
+  if((messageContainer.scrollTop + messageContainer.clientHeight) + 1 < messageContainer.scrollHeight) {
+    console.log("akdasdas")
+    return 
+  }
+  scrollToBottom()
+})
+
+onMounted(() => {
+  scrollToBottom()
 })
 
 const showPanelEmojis = () => {
@@ -60,12 +66,19 @@ function formatRelativeDate(date) {
 }
 
 const sendMessage = async () => {
-  console.log("akk")
+  console.log("message")
 
-  socket.emit('sendMessageToNickname', { 
-    nickname: friend.value.nickname, 
-    message: inputValue.value 
-  });
+  const data = {
+    id: window.crypto.randomUUID(),
+    from: user.value.nickname,
+    to: friend.value.nickname,
+    message: inputValue.value,
+    createdAt: Date.now(),
+  }
+
+  storeUser.socket.emit('sendMessageToNickname', data);
+  messages.value.push(data)
+  setTimeout(() => scrollToBottom(), 100) 
 }
 
 </script>
