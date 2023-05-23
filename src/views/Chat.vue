@@ -31,10 +31,9 @@ storeUser.socket.on("messageReceived", (data) => {
   messages.value.push(data)
 
   if((messageContainer.scrollTop + messageContainer.clientHeight) + 1 < messageContainer.scrollHeight) {
-    console.log("akdasdas")
     return 
   }
-  scrollToBottom()
+  setTimeout(() => scrollToBottom(), 100)
 })
 
 onMounted(() => {
@@ -78,7 +77,8 @@ const sendMessage = async () => {
 
   storeUser.socket.emit('sendMessageToNickname', data);
   messages.value.push(data)
-  setTimeout(() => scrollToBottom(), 100) 
+  setTimeout(() => scrollToBottom(), 100)
+  inputValue.value = "" 
 }
 
 </script>
@@ -121,7 +121,7 @@ const sendMessage = async () => {
         <i v-if="!activeEmojis" class='bx bx-smile'></i>
         <i v-if="activeEmojis" class='bx bx-x'></i>
       </button>
-      <input type="text" class="input" id="input" v-model="inputValue" placeholder="Mensagem">
+      <input type="text" @keyup.enter="sendMessage" class="input" id="input" v-model="inputValue" placeholder="Mensagem">
       <button @click="sendMessage" class="btn-primary">
         <i class='bx bxs-send'></i>
       </button>
